@@ -8,11 +8,8 @@ module.exports = {
     return response.render('job');
   },
 
-  save(request, response) {
-    const lastId = Job.get()[Job.get().length - 1]?.id || 0;
-
-    Job.get().push({
-      id: lastId + 1,
+  async save(request, response) {
+    await Job.create({
       name: request.body.name,
       dailyHours: Number(request.body['daily-hours']),
       totalHours: Number(request.body['total-hours']),
@@ -22,54 +19,43 @@ module.exports = {
     return response.redirect('/');
   },
 
-  show(request, response) {
+  async show(request, response) {
+    const jobs = await Job.get();
+    const profile = await Profile.get();
+
     const jobId = request.params.id;
 
-    const job = Job.get().find(job => Number(job.id) === Number(jobId));
+    const job = jobs.find(job => Number(job.id) === Number(jobId));
 
     if (!job) {
       return response.send('Job not found!');
     }
 
-    job.budget = JobUtils.calculateBudget(job, Profile.get().valueHour);
+    job.budget = JobUtils.calculateBudget(job, profile.valueHour);
 
     return response.render('job-edit', { job })
   },
 
-  update(request, response) {
-    const jobId = request.params.id;
-
-    const job = Job.get().find(job => Number(job.id) === Number(jobId));
-
-    if (!job) {
-      return response.send('Job not found!');
-    }
+  async update(request, response) {
+    const jobId = request.params.id
 
     const updatedJob = {
-      ...job,
+      id: jobId,
       name: request.body.name,
       totalHours: request.body['total-hours'],
       dailyHours: request.body['daily-hours'],
     };
 
-    const jobsUpdated = Job.get().map(job => {
-      if (Number(job.id) === Number(updatedJob.id)) {
-        job = updatedJob;
-      }
+    await Job.update(updatedJob);
 
-      return job;
-    });
-
-    Job.update(jobsUpdated);
-
-    response.redirect('/job/' + job.id);
+    response.redirect('/job/' + jobId);
   },
 
-  delete(request, response) {
+  async delete(request, response) {
     const jobId = request.params.id;
 
-    Job.delete(jobId);
+    await Job.delete(jobId);
 
-    response.redirect('/');
+    return response.redirect('/');
   }
 }

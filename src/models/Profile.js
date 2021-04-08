@@ -1,19 +1,37 @@
-let data = {
-  name: "Danilo Augusto",
-  avatar: "https://github.com/daniloamsilva.png",
-  monthlyBudget: 3000,
-  daysPerWeek: 5,
-  hoursPerDay: 5,
-  vacationPerYear: 4,
-  valueHour: 80
-}
+const Database = require('../db/config');
 
 module.exports = {
-  get() {
-    return data;
+  async get() {
+    const db = await Database();
+
+    const data = await db.get(`SELECT * FROM profile`);
+
+    await db.close();
+
+    return {
+      name: data.name,
+      avatar: data.avatar,
+      monthlyBudget: data.monthly_budget,
+      daysPerWeek: data.days_per_week,
+      hoursPerDay: data.hours_per_day,
+      vacationPerYear: data.vacation_per_year,
+      valueHour: data.value_hour
+    };
   },
 
-  update(dataUpdated) {
-    data = dataUpdated;
+  async update(dataUpdated) {
+    const db = await Database();
+
+    await db.run(`UPDATE profile SET
+      name = "${dataUpdated.name}",
+      avatar = "${dataUpdated.avatar}",
+      monthly_budget = ${dataUpdated.monthlyBudget},
+      days_per_week = ${dataUpdated.daysPerWeek},
+      hours_per_day = ${dataUpdated.hoursPerDay},
+      vacation_per_year = ${dataUpdated.vacationPerYear},
+      value_hour = ${dataUpdated.valueHour}
+    `);
+
+    await db.close();
   }
 }
