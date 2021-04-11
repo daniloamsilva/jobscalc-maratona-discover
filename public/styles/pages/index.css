@@ -148,6 +148,20 @@ main {
   margin-top: -2.825rem;
 }
 
+/* 
+ * search
+/* -------------------------------------------------- */
+#search_input {
+  background-image: url('/images/search.svg');
+  background-size: 1.3rem;
+  background-position: 0.6rem 0.8rem;
+  background-repeat: no-repeat;
+  padding-left: 3rem;
+  margin-bottom: 10px;
+
+  width: 50%;
+}
+
 
 /* 
  * CARD
@@ -273,5 +287,9 @@ main {
   }
   .column.actions{
     grid-area: rb;
+  }
+
+  #search_input {
+    width: 100%;
   }
 }
