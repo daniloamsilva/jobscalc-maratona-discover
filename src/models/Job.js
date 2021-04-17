@@ -13,6 +13,7 @@ module.exports = {
       name: job.name,
       dailyHours: job.daily_hours,
       totalHours: job.total_hours,
+      status: job.status,
       created_at: job.created_at
     }));
   },
@@ -20,12 +21,19 @@ module.exports = {
   async update(updatedJob) {
     const db = await Database();
 
-    await db.run(`UPDATE jobs SET
-      name = "${updatedJob.name}",
-      daily_hours = ${updatedJob.dailyHours},
-      total_hours = ${updatedJob.totalHours}
-    WHERE id = ${updatedJob.id}
-    `)
+    if (updatedJob.status){
+      await db.run(`UPDATE jobs SET
+        status = "${updatedJob.status}"
+      WHERE id = ${updatedJob.id}
+      `)
+    } else {
+      await db.run(`UPDATE jobs SET
+        name = "${updatedJob.name}",
+        daily_hours = ${updatedJob.dailyHours},
+        total_hours = ${updatedJob.totalHours}
+      WHERE id = ${updatedJob.id}
+      `)
+    }
 
     await db.close();
   },
@@ -45,11 +53,13 @@ module.exports = {
       name,
       daily_hours,
       total_hours,
+      status,
       created_at
     ) VALUES (
       "${newJob.name}",
       ${newJob.dailyHours},
       ${newJob.totalHours},
+      'progress',
       ${newJob.created_at}
     )`);
 

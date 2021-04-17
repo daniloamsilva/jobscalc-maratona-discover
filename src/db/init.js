@@ -20,6 +20,7 @@ const initDb = {
       name TEXT,
       daily_hours INT,
       total_hours INT,
+      status TEXT,
       created_at DATETIME
     )`);
     
@@ -45,11 +46,13 @@ const initDb = {
       name,
       daily_hours,
       total_hours,
+      status,
       created_at
     ) VALUES (
       "Pizzaria Guloso",
       2,
       1,
+      "progress",
       1617514376018
     )`);
     
@@ -57,11 +60,13 @@ const initDb = {
       name,
       daily_hours,
       total_hours,
+      status,
       created_at
     ) VALUES (
       "OneTwo Project",
       3,
       47,
+      "progress",
       1617514376018
     )`);
     

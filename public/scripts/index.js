@@ -1,17 +1,27 @@
 import Modal from './modal.js';
 
-const modal = Modal({ animateClasses: ['animate-pop', 'back'] })
+const deleteModal = Modal({ id: 'delete-modal', animateClasses: ['animate-pop', 'back'] })
+const endedModal = Modal({ id: 'ended-modal', animateClasses: ['animate-pop', 'back'] })
 
 const cards = document.querySelectorAll('.cards .card')
 const deleteForm = document.querySelector('#delete-job')
+const endedForm = document.querySelector('#ended-job')
 
 for (let card of cards) {
   const cardId = card.dataset.id
 
   const deleteButton = card.querySelector('button.delete')
   deleteButton.onclick = () => {
-    modal.open()
+    deleteModal.open()
     deleteForm.setAttribute('action', '/job/delete/' + cardId)
+  }
+
+  const endedButton = card.querySelector('button.close')
+  if(endedButton){
+    endedButton.onclick = () => {
+      endedModal.open()
+      endedForm.setAttribute('action', `/job/${cardId}/status_update`)
+    }
   }
 }
 

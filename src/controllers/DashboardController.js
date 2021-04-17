@@ -11,22 +11,26 @@ module.exports = {
     const statusCount = {
       progress: 0,
       done: 0,
+      'period-ended': 0,
       total: jobs.length
     };
 
     let freeHours = profile.hoursPerDay;
     
     const updatedJobs = jobs.map(job => {
-      const remaining = JobUtils.remainingDays(job);
-      const status = remaining <= 0 ? 'done' : 'progress';
+      let remaining = 0;
+      
+      if(job.status !== 'done'){
+        remaining = JobUtils.remainingDays(job);
+        job.status = remaining <= 0 ? 'period-ended' : 'progress';
+      }
 
-      statusCount[status] += 1;
-      freeHours -= status === 'progress' ? job.dailyHours : 0;
+      statusCount[job.status] += 1;
+      freeHours -= job.status !== 'done' ? job.dailyHours : 0;
 
       return {
         ...job,
         remaining,
-        status,
         budget: JobUtils.calculateBudget(job, profile.valueHour)
       }
     });

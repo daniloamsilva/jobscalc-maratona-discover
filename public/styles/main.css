@@ -27,11 +27,14 @@
   --color-cancel: #E1E3E5;
   --color-delete: #EB3B35; 
   --color-save: #36B336;
+  --color-warning: #b3b136;
   
   --color-badge-progress-text: var(--color-save);
   --color-badge-progress-background: #E8F8E8;
   --color-badge-done-text: var(--color-delete);
   --color-badge-done-background:#FAECEB;
+  --color-badge-period-ended-text: var(--color-warning);
+  --color-badge-period-ended-background:#f9faeb;
 
   --color-header-inner-title: var(--color-card-label)
 

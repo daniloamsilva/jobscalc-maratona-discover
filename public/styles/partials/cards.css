@@ -35,3 +35,8 @@
   background: var(--color-badge-done-background);
   color: var(--color-badge-done-text);
 }
+
+.period-ended .badge {
+  background: var(--color-badge-period-ended-background);
+  color: var(--color-badge-period-ended-text);
+}

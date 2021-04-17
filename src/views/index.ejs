@@ -59,6 +59,10 @@
               <strong><%= statusCount.progress %> </strong>
               Em andamento
             </div>
+            <div class="in-period-ended">
+              <strong><%= statusCount['period-ended'] %> </strong>
+              Prazos Encerrados
+            </div>
             <div class="finished">
               <strong><%= statusCount.done %> </strong>
               Encerrados
@@ -72,7 +76,9 @@
           </a>
         </section>
 
-        <input type="text" id="search_input" placeholder="Procurar por jobs...">
+        <div class="animate-up delay-1">
+          <input type="text" id="search_input" placeholder="Procurar por jobs...">
+        </div>
       </div>
     </header>
 
@@ -91,19 +97,32 @@
                 <span>Prazo</span>
                 <% if(job.status === 'progress'){ %> 
                   <p><%= job.remaining %>  dias para a entrega</p>
-                <% } else { %> 
+                <% } else if(job.status === 'period-ended') { %> 
                   <p>Prazo encerrado</p>
-                <% } %> 
+                <% } else { %>
+                  <p>Job encerrado</p>
+                <% } %>  
               </div>
               <div class="amount column">
                 <span>Valor</span>
                 <p>R$ <%= job.budget.toFixed(2).replace('.', ',') %></p>
               </div>
               <div class="status badge column">
-                <%= job.status === 'done' ? 'Encerrado' : 'Em andamento' %> 
+                <% if (job.status === 'done') { %>
+                 Encerrado
+                <% } else if (job.status === 'progress') { %>
+                  Em andamento
+                <% } else if (job.status === 'period-ended') { %>
+                  Prazo encerrado
+                <% } %>
               </div>
               <div class="actions column flex">
                 <p class="sr-only">Ações</p>
+                <% if(job.status !== 'done'){ %> 
+                  <button class="button white close" title="Encerrar Job">
+                    <img src="/images/check-circle-24.svg" alt="Encerrar Job" />
+                  </button>
+                <% } %> 
                 <a 
                   href="/job/<%= job.id %> " 
                   class="button white edit" 
@@ -123,7 +142,7 @@
     </div>
     <!-- end container -->
 
-    <div class="modal-wrapper">
+    <div id="delete-modal" class="modal-wrapper">
       <div class="modal">
         <img src="/images/trash-48.svg" alt="Excluir Job" title="Excluir Job" />
         <h3>Excluir Job</h3>
@@ -144,6 +163,30 @@
         method="post" 
         action="/job/delete" 
         id="delete-job"></form>
+    </div>
+    <!-- end modal-wrapper -->
+
+    <div id="ended-modal" class="modal-wrapper">
+      <div class="modal">
+        <img src="/images/check-circle-48.svg" alt="Encerrar Job" title="Encerrar Job" />
+        <h3>Encerrar Job</h3>
+        <p>Quer mesmo encerrar esse job? <br/>
+        Ele será encerrado para sempre.  
+        <p>
+        <footer>
+          <a 
+            class="button gray" 
+            href="#">Cancelar</a>
+          <button
+            class="button green"
+            type="submit"
+            form="ended-job">Encerrar Job</button>
+        </footer>
+      </div>
+      <form 
+        method="post" 
+        action="/job/status_update" 
+        id="ended-job"></form>
     </div>
     <!-- end modal-wrapper -->
   </body>
